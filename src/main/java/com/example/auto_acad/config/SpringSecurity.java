@@ -23,7 +23,7 @@ public class SpringSecurity {
         http
                 .csrf().disable() // Disable CSRF for simplicity (enable it in production with proper setup)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/add-mentor/**","/id/**").permitAll() // Allow public access to specific endpoints
+                        .requestMatchers("/add-mentor/**","/id/**","/health-check").permitAll() // Allow public access to specific endpoints
                         .anyRequest().authenticated() // Require authentication for other endpoints
                 )
                 .httpBasic(); // Use HTTP Basic Authentication (or configure JWT for production)
