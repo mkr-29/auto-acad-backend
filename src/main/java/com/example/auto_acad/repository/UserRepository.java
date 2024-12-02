@@ -4,5 +4,6 @@ import com.example.auto_acad.entity.Users;
 import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
-public interface UserRepository extends MongoRepository<Users, Integer> {
+public interface UserRepository extends MongoRepository<Users, ObjectId> {
+    // You can add custom query methods here if needed
 }
