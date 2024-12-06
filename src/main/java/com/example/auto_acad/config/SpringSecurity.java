@@ -33,14 +33,6 @@ public class SpringSecurity implements WebMvcConfigurer {
         return http.build();
     }
 
-    // In-memory authentication setup
-    public void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.inMemoryAuthentication()
-                .withUser("admin")
-                .password(passwordEncoder().encode("admin123"))
-                .roles("ADMIN");
-    }
-
     // Global CORS configuration
     @Override
     public void addCorsMappings(CorsRegistry registry) {
