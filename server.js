@@ -1,52 +1,41 @@
 const express = require("express");
-const mongoose = require("mongoose");
-const User = require("./models/users.model");
+const dontenv = require("dotenv");
+const connectDB = require("./config/db");
+const cors = require('cors');
+const cookieParser = require('cookie-parser');
+const { restrictToLoggedInUserOnly } = require("./middlewares/auth");
+
+// routes
+const userRoutes = require("./routes/users/users.route");
+// const authRoutes = require("./routes/auth/auth.route");
+
+// Load env variables
+dontenv.config();
+
+// Connect to MongoDB
+connectDB();
+
+// Create an express app
 const app = express();
 
 // middleware
 app.use(express.json());
+app.use(express.urlencoded({extended: false}));
+app.use(cookieParser());
 
-app.get("/", (req, res) => {
-  res.send("Hello root");
-});
+// cors
+app.use(cors({
+  origin: process.env.FRONTEND_URI, // Replace with your frontend's origin
+  methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allowed HTTP methods
+  credentials: true // Allow cookies or credentials if needed
+}));
 
-// route files
-const user = require("./routes/user/user");
-// const admin = require("./routes/admin/admin");
+// user routes
+app.use("/api/users", userRoutes);
+// app.use("/auth", authRoutes); // Use the /auth route for authentication
 
-// use routes
-app.use("/user", user);
-
-const port = process.env.PORT || 3000;
-
-app.get("/api/users", async (req, res) => {
-  try {
-    const users = await User.find();
-    res.status(200).json({ users });
-  } catch {
-    res.status(500).json({ message: error.message });
-  }
-});
-
-app.post("/api/users", async (req, res) => {
-  try {
-    const user = await User.create(req.body);
-    res.status(200).json({ user });
-  } catch {
-    res.status(500).json({ message: error.message });
-  }
-});
-
-mongoose
-  .connect(
-    "mongodb+srv://mkr-27:AmM7teMsjt1qtud2@userdb.5vxxh.mongodb.net/?retryWrites=true&w=majority&appName=UserDB"
-  )
-  .then(() => {
-    console.log("Connected to MongoDB");
-    app.listen(port, () => {
-      console.log(`Server is running on port http://localhost:${port}`);
-    });
-  })
-  .catch((err) => {
-    console.log("Error connecting to MongoDB", err);
-  });
+// server
+const PORT = process.env.PORT || 5300;
+app.listen(PORT, () =>
+  console.log(`Server running at http://localhost:${PORT}`)
+);

@@ -6,6 +6,11 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: [true, "Name is required"],
     },
+    userId: {
+      type: Number,
+      required: [true, "User ID is required"],
+      uique: true,
+    },
     email: {
       type: String,
       required: [true, "Email is required"],
@@ -16,11 +21,12 @@ const userSchema = new mongoose.Schema(
     },
     role: {
       type: String,
-      enum: ["user", "admin"],
+      enum: ["mentor", "student"],
       default: "user",
+      required: [true, "Role is required"],
     },
   },
-  {
+  { 
     timestamps: true,
   }
 );
