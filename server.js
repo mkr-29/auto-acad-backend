@@ -32,7 +32,7 @@ app.use(cors({
 
 // user routes
 app.use("/api/users", userRoutes);
-// app.use("/auth", authRoutes); // Use the /auth route for authentication
+// app.use("/auth", authRoutes); // Use the /auth route for authenticatio
 
 // server
 const PORT = process.env.PORT || 5300;
