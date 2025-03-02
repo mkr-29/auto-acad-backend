@@ -8,6 +8,10 @@ const { restrictToLoggedInUserOnly } = require("./middlewares/auth");
 // routes
 const userRoutes = require("./routes/users/users.route");
 // const authRoutes = require("./routes/auth/auth.route");
+const studentRoutes = require("./routes/students/students.route");
+const collegeRoutes = require("./routes/college/college.route");
+const subjectRoutes = require("./routes/subjects/subjects.route");
+const parentRoutes = require("./routes/parents/parents.route");
 
 // Load env variables
 dontenv.config();
@@ -33,6 +37,14 @@ app.use(cors({
 // user routes
 app.use("/api/users", userRoutes);
 // app.use("/auth", authRoutes); // Use the /auth route for authenticatio
+// student routes
+app.use("/api/students", restrictToLoggedInUserOnly, studentRoutes);
+// college routes
+app.use("/api/college", restrictToLoggedInUserOnly, collegeRoutes);
+// subjects routes
+app.use("/api/subject", restrictToLoggedInUserOnly, subjectRoutes);
+// parent routes
+app.use("/api/parents", restrictToLoggedInUserOnly, parentRoutes);
 
 // server
 const PORT = process.env.PORT || 5300;

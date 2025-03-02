@@ -1,4 +1,4 @@
-const { v4: uuidv4 } = require("uuid");
+// const { v4: uuidv4 } = require("uuid");
 const User = require("../../models/users/users.model");
 const bcrypt = require("bcrypt");
 const { setUser } = require("../auth/auth");
