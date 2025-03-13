@@ -72,6 +72,10 @@ const studentSchema = new mongoose.Schema({
       required: [true, "Parents Data ID is required"],
     },
   },
+  userId: {
+    type: Number,
+    required: [true, "User ID is required"],
+  },
 });
 
 // Pre save hook to add subject count

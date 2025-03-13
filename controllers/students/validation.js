@@ -24,7 +24,9 @@ const createStudentSchema = Joi.object({
     }).required(),
 
     parentsData: Joi.string().required(),
+
   }).required(),
+  userId: Joi.number().required(),
 });
 
 module.exports = {
