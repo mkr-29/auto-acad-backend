@@ -76,6 +76,21 @@ const studentSchema = new mongoose.Schema({
     type: Number,
     required: [true, "User ID is required"],
   },
+
+// editing here -> roll(fetch by roll Number)
+  roll:{
+    type:Number,
+    required:[true, "Roll Number is required"],
+  },
+
+
+
+
+
+
+
+
+
 });
 
 // Pre save hook to add subject count
