@@ -4,6 +4,7 @@ const {
   createStudent,
   updateStudent,
   deleteStudent,
+  getStudentsByUserId,
 } = require("../../services/students/students.service");
 const validation = require("./validation");
 
@@ -49,6 +50,31 @@ const findStudent = async (req, res) => {
     });
   }
 };
+
+const findStudentsByUserId = async (req, res) => {
+  try {
+    const userId = req.params.userId;
+    console.log("userId", userId);
+    const students = await getStudentsByUserId(userId);
+    if (!students) {
+      return res.status(404).json({
+        success: false,
+        message: "Students not found.",
+      });
+    }
+    res.status(200).json({
+      success: true,
+      data: students,
+    });
+  } catch (error) {
+    console.error("Error fetching students:", error.message);
+    res.status(500).json({
+      success: false,
+      message: "Failed to fetch students.",
+      error: error.message,
+    });
+  }
+}
 
 // POST - create a new student
 const addStudent = async (req, res) => {
@@ -148,6 +174,7 @@ module.exports = {
   getStudents,
   findStudent,
   addStudent,
+  findStudentsByUserId,
   updateStudentDetails,
   removeStudent,
 };

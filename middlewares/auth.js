@@ -5,6 +5,7 @@ const restrictToLoggedInUserOnly = async (req, res, next) => {
     try {
         // Read token from Authorization header
         const authHeader = req.headers.authorization;
+        console.log("authHeader", req.headers);
         if (!authHeader || !authHeader.startsWith("Bearer ")) {
             return res.status(401).json({ message: "Unauthorized user - No token" });
         }

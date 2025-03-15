@@ -20,6 +20,16 @@ const findStudentById = async (studentId) => {
   }
 };
 
+// find students by user id
+const getStudentsByUserId = async (userId) => {
+  try {
+    const students = await Student.find({ userId });
+    return students;
+  } catch (error) {
+    throw new Error("Failed to fetch students: " + error.message);
+  }
+}
+
 // Create a new student
 const createStudent = async (studentData) => {
   try {
@@ -55,6 +65,7 @@ const deleteStudent = async (studentId) => {
 module.exports = {
   getAllStudents,
   findStudentById,
+  getStudentsByUserId,
   createStudent,
   updateStudent,
   deleteStudent,
