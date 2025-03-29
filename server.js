@@ -12,6 +12,7 @@ const studentRoutes = require("./routes/students/students.route");
 const collegeRoutes = require("./routes/college/college.route");
 const subjectRoutes = require("./routes/subjects/subjects.route");
 const parentRoutes = require("./routes/parents/parents.route");
+const emailRoutes = require("./routes/emails/emails.route");
 
 // Load env variables
 dontenv.config();
@@ -45,6 +46,8 @@ app.use("/api/college", restrictToLoggedInUserOnly, collegeRoutes);
 app.use("/api/subject", restrictToLoggedInUserOnly, subjectRoutes);
 // parent routes
 app.use("/api/parents", restrictToLoggedInUserOnly, parentRoutes);
+// email routes
+app.use("/api/emails", restrictToLoggedInUserOnly, emailRoutes);
 
 // server
 const PORT = process.env.PORT || 5300;
