@@ -10,16 +10,6 @@ const createEmail = async (emailData) => {
   }
 };
 
-// Fetch all emails
-const getAllEmails = async () => {
-  try {
-    const emails = await Emails.find({});
-    return emails;
-  } catch (error) {
-    throw new Error("Failed to fetch emails: " + error.message);
-  }
-};
-
 const getEmailsByUserId = async (userId) => {
   try {
     const emails = await Emails.find({ userId });
@@ -29,28 +19,57 @@ const getEmailsByUserId = async (userId) => {
   }
 };
 
-const deleteEmailById = async (emailId) => {
+const deleteEmailById = async (emailId, userId) => {
   try {
-    const email = await Emails.findByIdAndDelete(emailId);
+    // First verify the email belongs to the user
+    const email = await Emails.findOne({ _id: emailId, userId });
+    if (!email) {
+      throw new Error("Email not found or unauthorized");
+    }
+    await Emails.findByIdAndDelete(emailId);
     return email;
   } catch (error) {
     throw new Error("Failed to delete email: " + error.message);
   }
 };
 
-const getEmailTemplateById = async (emailId) => {
+const getEmailTemplateById = async (emailId, userId) => {
   try {
-    const email = await Emails.findById(emailId);
+    const email = await Emails.findOne({ _id: emailId, userId });
+    if (!email) {
+      throw new Error("Email template not found or unauthorized");
+    }
     return email;
   } catch (error) {
     throw new Error("Failed to get email template: " + error.message);
   }
 };
 
+const updateEmailById = async (emailId, userId, updateData) => {
+  try {
+    // First verify the email belongs to the user
+    const email = await Emails.findOne({ _id: emailId, userId });
+    if (!email) {
+      throw new Error("Email not found or unauthorized");
+    }
+
+    // Update the email
+    const updatedEmail = await Emails.findByIdAndUpdate(
+      emailId,
+      { ...updateData, lastEdited: new Date() },
+      { new: true, runValidators: true }
+    );
+
+    return updatedEmail;
+  } catch (error) {
+    throw new Error("Failed to update email: " + error.message);
+  }
+};
+
 module.exports = {
   createEmail,
-  getAllEmails,
   getEmailsByUserId,
   deleteEmailById,
   getEmailTemplateById,
+  updateEmailById,
 };

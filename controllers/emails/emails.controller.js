@@ -4,12 +4,17 @@ const {
   getEmailsByUserId,
   deleteEmailById,
   getEmailTemplateById,
+  updateEmailById,
 } = require("../../services/emails/emails.service");
 const validation = require("./validation.js");
 
 const addEmail = async (req, res) => {
   try {
-    const { error } = validation.createEmailSchema.validate(req.body, {
+    const { error } = validation.createEmailSchema.validate({
+      subject: req.body.subject,
+      body: req.body.body,
+      lastEdited: req.body.lastEdited,
+    }, {
       abortEarly: false,
     });
     if (error) {
@@ -20,7 +25,12 @@ const addEmail = async (req, res) => {
       });
     }
 
-    const email = await createEmail(req.body);
+    const emailData = {
+      ...req.body,
+      userId: req.user.userId // Get userId from authenticated user
+    };
+
+    const email = await createEmail(emailData);
     res.status(201).json({
       success: true,
       message: "Email created successfully",
@@ -56,8 +66,8 @@ const getEmails = async (req, res) => {
 
 const findEmailsByUserId = async (req, res) => {
   try {
-    const { userId } = req.params;
-    const emails = await getEmailsByUserId(userId);
+    // Use authenticated user's ID instead of URL parameter
+    const emails = await getEmailsByUserId(req.user.userId);
     if (!emails) {
       return res.status(404).json({
         success: false,
@@ -87,7 +97,7 @@ const findEmailsByUserId = async (req, res) => {
 const deleteEmail = async (req, res) => {
   try {
     const { emailId } = req.params;
-    const email = await deleteEmailById(emailId);
+    const email = await deleteEmailById(emailId, req.user.userId);
     res.status(200).json({
       success: true,
       message: "Email deleted successfully",
@@ -106,7 +116,7 @@ const deleteEmail = async (req, res) => {
 const getEmailTemplate = async (req, res) => {
   try {
     const { emailId } = req.params;
-    const email = await getEmailTemplateById(emailId);
+    const email = await getEmailTemplateById(emailId, req.user.userId);
     res.status(200).json({
       success: true,
       message: "Email template fetched successfully",
@@ -122,10 +132,42 @@ const getEmailTemplate = async (req, res) => {
   }
 };
 
+const updateEmail = async (req, res) => {
+  try {
+    const { error } = validation.updateEmailSchema.validate(req.body, {
+      abortEarly: false,
+    });
+    if (error) {
+      return res.status(400).json({
+        success: false,
+        message: "Validation error",
+        errors: error.details,
+      });
+    }
+
+    const { emailId } = req.params;
+    const updatedEmail = await updateEmailById(emailId, req.user.userId, req.body);
+    
+    res.status(200).json({
+      success: true,
+      message: "Email updated successfully",
+      data: updatedEmail,
+    });
+  } catch (error) {
+    console.error("Error updating email:", error.message);
+    res.status(400).json({
+      success: false,
+      message: "Failed to update email",
+      error: error.message,
+    });
+  }
+};
+
 module.exports = {
   addEmail,
   getEmails,
   findEmailsByUserId,
   deleteEmail,
   getEmailTemplate,
+  updateEmail,
 };
