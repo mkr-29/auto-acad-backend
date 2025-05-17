@@ -55,6 +55,8 @@ const findStudent = async (req, res) => {
 const findStudentsByUserId = async (req, res) => {
   try {
     const { userId } = req.params;
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
     
     if (!userId) {
       return res.status(400).json({
@@ -63,11 +65,12 @@ const findStudentsByUserId = async (req, res) => {
       });
     }
 
-    const students = await getStudentsByUserId(userId);
+    const result = await getStudentsByUserId(userId, page, limit);
     
     res.status(200).json({
       success: true,
-      data: students,
+      data: result.data,
+      pagination: result.pagination
     });
   } catch (error) {
     console.error("Error fetching students by userId:", error.message);
