@@ -2,6 +2,8 @@
 
 This is the backend repository for the Auto-Acad project, a comprehensive academic automation system. The frontend code can be found at [auto-acad](https://github.com/mkr-29/auto-acad).
 
+> **Note:** The main development work is being done in the `dev` branch. Please make sure to work on feature branches created from `dev`.
+
 ## Tech Stack
 
 ### Core Technologies
